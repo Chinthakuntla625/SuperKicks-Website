@@ -1,0 +1,85 @@
+*{
+  font-family: "Inter", sans-serif;
+  font-optical-sizing: auto;
+}
+.sticky-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000; 
+  background-color: white; 
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+  padding: 1px 15px; 
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.link{
+  color: rgb(255, 255, 255);
+  text-decoration: none;
+  margin-top: 8px;
+  padding-top: 8px;
+  
+}
+.link:hover{
+  text-decoration: underline rgb(243, 240, 240);
+}
+
+.Header-content {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  justify-content: space-between;
+}
+
+.Header-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+ 
+}
+
+.Header-center {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.Header-right {
+  display: flex;
+  align-items: center;
+  margin-top: 4px;
+}
+
+.img1 {
+  max-height: 60px;
+  width: auto;
+  margin-left: 25px;
+}
+
+.Header-right Input[type="text"] {
+  padding: 7px;
+  width: 150px;
+  font-weight: bold;
+  border-radius: 20px;
+  border: 1px solid grey;
+  /* border: none; */
+  margin-left: 4px;
+  margin-top: 4px;
+  margin-bottom: 5px;
+  
+  
+}
+.Header input::placeholder{
+  color: black;
+
+}
+.box {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+}
+

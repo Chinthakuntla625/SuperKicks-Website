@@ -1,0 +1,20 @@
+.carousel-image {
+  width: 1700px;
+  height: 600px;
+  padding-left: 4px;
+  border-radius: 15px;
+  box-shadow: 1px 2px 2px 0.5px rgba(0, 0, 0, 0.1);
+   
+}
+.carousel-image:hover{
+  box-shadow: 0 13px 26px rgba(0, 0, 0, 1.2);
+}
+.carousel {
+  margin-bottom: 20px; 
+  margin-top: 10px;
+    
+}
+
+
+
+  
