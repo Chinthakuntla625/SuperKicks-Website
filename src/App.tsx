@@ -139,7 +139,7 @@ const Header: React.FC<HeaderProps> = ({ search, setSearch }) => {
             <Badge badgeContent={count} color='secondary' max={9}>
               <Link to='./CartPage'>
                 <IconButton>
-                  <ShoppingCartIcon style={{ fontSize: isSmallScreen ? '20px' : '30px', cursor: "pointer", color: "black" }} />
+                  <ShoppingCartIcon style={{ fontSize: isSmallScreen ? '25px' : '30px', cursor: "pointer", color: "black" }} />
                 </IconButton>
               </Link>
             </Badge>
