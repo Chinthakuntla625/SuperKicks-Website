@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { addToCart } from './Cartslice';
-import { Card, CardMedia, CardContent, Typography, Button, Grid } from '@mui/material';
+import { Card, CardMedia, CardContent, Typography, Button, Grid, useMediaQuery } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import Footer from './Footer';
 import { ToastContainer, toast } from 'react-toastify';
@@ -29,30 +29,25 @@ interface CartItem {
 const NikeCard = styled(Card)(({ theme }) => ({
     width: '100%',
     maxWidth: 800,
-    borderRadius: 17,
     margin: theme.spacing(2),
+    borderRadius: 17,
+    mt:2
 }));
 
-const ProductContainer = styled('div')(({ theme }) => ({
-    padding: theme.spacing(2.5),
-    textAlign: 'left',
-    border: 'none',
-    boxShadow: theme.shadows[1],
-    borderRadius: 17,
-    marginTop: 10,
-    marginBottom: 20,
+const ImageContainer = styled('div')(({ theme }) => ({
+    marginRight: theme.spacing(2.5),
 }));
 
 const ImageStyle = {
     borderRadius: '8px',
-    padding: '10px',
     boxShadow: '0 4px 4px rgba(0, 0, 0, 0.1)',
     width: '100%',
-    height: 'auto',
+    height: 370,
     objectFit: 'cover',
+    mt:2
 };
 
-const CustomButton = styled(Button)(() => ({
+const CustomButton = styled(Button)(({ theme }) => ({
     margin: '0px',
     padding: '8px 12px',
     backgroundColor: 'purple',
@@ -69,7 +64,7 @@ const ProductDescription: React.FC = () => {
     const { id } = useParams<{ id: string }>();
     const [product, setProduct] = useState<Product | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
-    const [cartbtn, setCartbtn] = useState<string>("Add to cart");
+    const [cartBtnText, setCartBtnText] = useState<string>("Add to cart");
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -77,12 +72,13 @@ const ProductDescription: React.FC = () => {
             try {
                 const response = await fetch(`${process.env.REACT_APP_BASE_URL}/products/${id}`);
                 if (!response.ok) {
-                    throw new Error("Network response is not good");
+                    throw new Error("Failed to fetch product data");
                 }
                 const data: Product = await response.json();
                 setProduct(data);
             } catch (error) {
-                console.log("Error:", error);
+                console.error("Error:", error);
+                toast.error("Could not load product data");
             } finally {
                 setLoading(false);
             }
@@ -93,13 +89,8 @@ const ProductDescription: React.FC = () => {
         }
     }, [id]);
 
-    if (loading) {
-        return <p>Loading...</p>;
-    }
-
-    if (!product) {
-        return <p>Product not found</p>;
-    }
+    if (loading) return <p>Loading...</p>;
+    if (!product) return <p>Product not found</p>;
 
     const handleAddToCart = () => {
         if (product) {
@@ -108,13 +99,13 @@ const ProductDescription: React.FC = () => {
                 image: product.image,
                 model: product.model,
                 price: product.price,
-                quantity: 1,
+                quantity: 1, 
             };
             dispatch(addToCart(cartItem));
-            setCartbtn("Added");
+            setCartBtnText("Added");
             toast.success("Item added to Cart");
             setTimeout(() => {
-                setCartbtn("Add more (+)");
+                setCartBtnText("Add more (+)");
             }, 1500);
         }
     };
@@ -122,13 +113,15 @@ const ProductDescription: React.FC = () => {
     return (
         <div>
             <Grid container spacing={2} justifyContent="center">
-                <Grid item xs={12} sm={6}>
-                    <CardMedia
-                        component="img"
-                        alt={product.model}
-                        image={product.image}
-                        sx={ImageStyle}
-                    />
+                <Grid item>
+                    <ImageContainer>
+                        <CardMedia
+                            component="img"
+                            alt={product.model}
+                            image={product.image}
+                            sx={ImageStyle}
+                        />
+                    </ImageContainer>
                 </Grid>
                 <Grid item xs={12} sm={6}>
                     <NikeCard>
@@ -142,11 +135,9 @@ const ProductDescription: React.FC = () => {
                             <Typography variant="body2" color="text.primary" sx={{ display: "flex", flexDirection: "row" }}>
                                 <b style={{ color: "rgb(101,157,218)" }}>₹{product.price}</b>
                                 {product.oldPrice && (
-                                    <Typography>
-                                        <Typography style={{ fontWeight: "lighter", paddingLeft: "15px", fontSize: "small" }}>
-                                            M.R.P.:<del style={{ fontWeight: "lighter", paddingLeft: "5px", fontSize: "small" }}>
-                                                ₹{product.oldPrice}
-                                            </del>
+                                    <Typography sx={{ pl: 2 }}>
+                                        <Typography style={{ fontWeight: "lighter", fontSize: "small" }}>
+                                            M.R.P.: <del style={{ fontWeight: "lighter" }}>₹{product.oldPrice}</del>
                                         </Typography>
                                     </Typography>
                                 )}
@@ -157,11 +148,10 @@ const ProductDescription: React.FC = () => {
                             </Typography>
                             <CustomButton
                                 variant="contained"
-                                color="primary"
                                 onClick={handleAddToCart}
                                 sx={{ mt: 2 }}
                             >
-                                {cartbtn}
+                                {cartBtnText}
                             </CustomButton>
                         </CardContent>
                     </NikeCard>
