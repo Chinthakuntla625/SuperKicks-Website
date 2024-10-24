@@ -22,7 +22,7 @@ import Address from './Address';
 import Payment from './Payment';
 import Placeorder from './Placeorder';
 import Badge from '@mui/material/Badge';
-import { IconButton, Typography } from '@mui/material';
+import { IconButton, Typography, useMediaQuery } from '@mui/material';
 import { FiSearch } from "react-icons/fi";
 
 const App: React.FC = () => {
@@ -77,14 +77,15 @@ interface RootState {
   };
 }
 
+
 const Header: React.FC<HeaderProps> = ({ search, setSearch }) => {
   const count = useSelector((state: RootState) => state.cart.count);
   const [searchOpen, setSearchOpen] = React.useState<boolean>(false);
   const [title, setTitle] = React.useState<string>("Find your kicks");
 
-  const handleSearchOpen = () => {
-    setSearchOpen(true);
-  };
+  const isSmallScreen = useMediaQuery('(max-width: 768px)');
+
+  const handleSearchOpen = () => setSearchOpen(true);
 
   React.useEffect(() => {
     const updateTitle = () => {
@@ -93,9 +94,7 @@ const Header: React.FC<HeaderProps> = ({ search, setSearch }) => {
 
     updateTitle();
     window.addEventListener("resize", updateTitle);
-    return () => {
-      window.removeEventListener("resize", updateTitle);
-    };
+    return () => window.removeEventListener("resize", updateTitle);
   }, []);
 
   return (
@@ -105,10 +104,7 @@ const Header: React.FC<HeaderProps> = ({ search, setSearch }) => {
           <h2 style={{ color: 'rgb(241, 44, 44)', marginTop: "5px" }}>
             <Link to='./Products' style={{ textDecoration: "none", color: "orange" }}>
               <Typography 
-                sx={{ 
-                  fontSize: { xs: '1.5rem', sm: '2rem' }, 
-                  display: 'inline' 
-                }}
+                sx={{ fontSize: { xs: '1.5rem', sm: '2rem' }, display: 'inline' }}
               >
                 <b>{title}</b>
               </Typography>
@@ -124,26 +120,32 @@ const Header: React.FC<HeaderProps> = ({ search, setSearch }) => {
         </div>
         <div className='Header-right'>
           <Box className='box'>
-            {searchOpen === false ? (
-              <IconButton onClick={handleSearchOpen}><FiSearch style={{ fontSize: '30px', cursor: "pointer", color: "black" }} /></IconButton>
-            ) : (
-              <input
-                type="text"
-                placeholder='Search Sneaker'
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-              />
+            {!isSmallScreen && (
+              <>
+                {searchOpen ? (
+                  <input
+                    type="text"
+                    placeholder='Search Sneaker'
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
+                  />
+                ) : (
+                  <IconButton onClick={handleSearchOpen}>
+                    <FiSearch style={{ fontSize: '30px', cursor: "pointer", color: "black" }} />
+                  </IconButton>
+                )}
+              </>
             )}
             <Badge badgeContent={count} color='secondary' max={9}>
               <Link to='./CartPage'>
                 <IconButton>
-                  <ShoppingCartIcon style={{ fontSize: '30px', cursor: "pointer", color: "black" }} />
+                  <ShoppingCartIcon style={{ fontSize: isSmallScreen ? '20px' : '30px', cursor: "pointer", color: "black" }} />
                 </IconButton>
               </Link>
             </Badge>
-            <FadeMenu />
           </Box>
         </div>
+        <FadeMenu />
       </div>
     </div>
   );
@@ -183,4 +185,7 @@ const Head: React.FC = () => {
 }
 
 export default App;
+
+
+
 
