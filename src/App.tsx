@@ -80,17 +80,39 @@ interface RootState {
 const Header: React.FC<HeaderProps> = ({ search, setSearch }) => {
   const count = useSelector((state: RootState) => state.cart.count);
   const [searchOpen, setSearchOpen] = React.useState<boolean>(false);
+  const [title, setTitle] = React.useState<string>("Find your kicks");
 
   const handleSearchOpen = () => {
     setSearchOpen(true);
   };
+
+  React.useEffect(() => {
+    const updateTitle = () => {
+      setTitle(window.innerWidth <= 768 ? "KICKS" : "Find your kicks");
+    };
+
+    updateTitle();
+    window.addEventListener("resize", updateTitle);
+    return () => {
+      window.removeEventListener("resize", updateTitle);
+    };
+  }, []);
 
   return (
     <div className="sticky-header">
       <div className='Header-content'>
         <div className='Header-left'>
           <h2 style={{ color: 'rgb(241, 44, 44)', marginTop: "5px" }}>
-            <Link to='./Products' style={{ textDecoration: "none", color: "orange" ,}}><Typography sx={{ fontSize: { xs: '1.5rem', sm: '2rem' } }}><b>Find your kicks..</b></Typography></Link>
+            <Link to='./Products' style={{ textDecoration: "none", color: "orange" }}>
+              <Typography 
+                sx={{ 
+                  fontSize: { xs: '1.5rem', sm: '2rem' }, 
+                  display: 'inline' 
+                }}
+              >
+                <b>{title}</b>
+              </Typography>
+            </Link>
           </h2>
         </div>
         <div className='Header-center'>
@@ -127,6 +149,7 @@ const Header: React.FC<HeaderProps> = ({ search, setSearch }) => {
   );
 };
 
+
 const Head: React.FC = () => {
   return (
     <div style={{
@@ -148,6 +171,7 @@ const Head: React.FC = () => {
         alignItems="center"
         justifyContent="center"
         gap={5}
+        color={'white'}
       >
         <Typography><Link to='/Nike' className='link'><b>Nike</b></Link></Typography>
         <Typography><Link to='/Adidas' className='link'><b>Adidas</b></Link></Typography>
@@ -159,3 +183,4 @@ const Head: React.FC = () => {
 }
 
 export default App;
+
