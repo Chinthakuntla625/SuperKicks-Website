@@ -83,3 +83,21 @@
 
 }
 
+
+.responsive-title {
+  font-size: 2rem; 
+}
+
+
+@media (min-width: 1200px) {
+  .responsive-title {
+    font-size: 2.5rem; 
+  }
+}
+
+@media (max-width: 768px) {
+  .responsive-title {
+    font-size: 1.3rem; 
+  }
+}
+
