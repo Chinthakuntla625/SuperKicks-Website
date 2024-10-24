@@ -111,7 +111,7 @@ const Forms: React.FC = () => {
 
               <Grid item xs={12} mb={2} marginTop={2} textAlign="center">
                 <DialogActions>
-                <Button type="submit" variant="contained" color="primary" style={{ width: '190px' }} disabled={isSubmitting}>
+                <Button type="submit" variant="contained" color="primary" style={{ width: '190px',marginRight:"20px" }} disabled={isSubmitting}>
                   Sign In
                 </Button>
                 </DialogActions>
