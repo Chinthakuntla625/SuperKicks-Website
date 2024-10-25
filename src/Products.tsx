@@ -1,5 +1,3 @@
-
-
 import React, { useState, useEffect } from 'react';
 import Carousel from 'react-bootstrap/Carousel';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -27,7 +25,8 @@ const MyCarouselComponent: React.FC = () => (
     <Carousel.Item>
       <Link to="/Nike">
         <img
-          src='https://cdn.findyourkicks.com/uploads/all/4571d3a3319822c8292340cb1fc8c21d.png'
+          // src='https://cdn.findyourkicks.com/uploads/all/4571d3a3319822c8292340cb1fc8c21d.png'
+          src='https://www.superkicks.in/cdn/shop/files/NIKE_DUNK-LOW-RETRO_2.jpg?v=1729582977&width=1500' 
           alt='Nike Deals'
           className='carousel-image'
           style={{ width: '100%', height: 'auto' }}
@@ -37,7 +36,8 @@ const MyCarouselComponent: React.FC = () => (
     <Carousel.Item>
       <Link to="/Adidas">
         <img
-          src='https://cdn.findyourkicks.com/uploads/all/e757cd4e577e253a57c16a742911933a.png'
+          // src='https://cdn.findyourkicks.com/uploads/all/e757cd4e577e253a57c16a742911933a.png'
+           src='https://www.superkicks.in/cdn/shop/files/PUMA_SPEEDCAT_BR_DESKTOP.jpg?v=1729582817&width=1500'
           alt='Adidas Banner'
           className='carousel-image'
           style={{ width: '100%', height: 'auto' }}
@@ -52,7 +52,7 @@ const MyCarouselComponent: React.FC = () => (
           className='carousel-image'
           style={{ width: '100%', height: 'auto' }}
         />
-      </Link>
+      </Link> 
     </Carousel.Item>
   </Carousel>
 );
