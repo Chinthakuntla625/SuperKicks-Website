@@ -1,161 +1,110 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
-import { addToCart } from './Cartslice';
-import { Card, CardMedia, CardContent, Typography, Button, Grid } from '@mui/material';
+import { useNavigate } from 'react-router-dom'; 
+import { Card, CardMedia, CardContent, Typography, Grid, Button } from '@mui/material';
 import { styled } from '@mui/material/styles';
+import axios from 'axios';
 import Footer from './Footer';
-import { ToastContainer, toast } from 'react-toastify';
-import Offers from './Offers';
-
-interface Product {
-    id: string;
-    image: string;
-    model: string;
-    brand: string;
-    price: number;
-    oldPrice?: number;
-    description: string;
-}
-
-interface CartItem {
-    id: string;
-    image: string;
-    model: string;
-    price: number;
-    quantity: number; 
-}
+import { SiNike } from "react-icons/si";
 
 const NikeCard = styled(Card)(({ theme }) => ({
-    width: '100%',
-    maxWidth: 800,
-    margin: theme.spacing(2),
-    borderRadius: 17,
-    mt: 2,
+  maxWidth: 345,
+  margin: theme.spacing(2),
+  boxShadow: theme.shadows[1],
+  transition: 'transform 0.2s ease-in-out',
+  '&:hover': {
+    transform: 'scale(1.03)',
+  }
 }));
 
-const ImageStyle = {
-    borderRadius: '8px',
-    boxShadow: '0 4px 4px rgba(0, 0, 0, 0.1)',
-    width: '100%',
-    height: 370,
-    objectFit: 'cover',
-    mt: 2,
-};
+interface Product {
+  id: string;
+  image: string;
+  model: string;
+  brand: string;
+  price: number;
+  oldPrice?: number;
+}
 
-const CustomButton = styled(Button)(({ theme }) => ({
-    margin: '0px',
-    padding: '8px 12px',
-    backgroundColor: 'purple',
-    color: 'white',
-    borderRadius: '4px',
-    transition: 'transform 0.3s ease, box-shadow 0.3s ease',
-    '&:hover': {
-        backgroundColor: '#AD68C1',
-        transform: 'scale(1.03)',
-    },
-}));
+interface NikeProps {
+  searchQuery: string;
+}
 
-const ProductDescription: React.FC = () => {
-    const { id } = useParams<{ id: string }>();
-    const [product, setProduct] = useState<Product | null>(null);
-    const [loading, setLoading] = useState<boolean>(true);
-    const [cartBtnText, setCartBtnText] = useState<string>("Add to cart");
-    const dispatch = useDispatch();
+const Nike: React.FC<NikeProps> = ({ searchQuery }) => {
+  const [products, setProducts] = useState<Product[]>([]);
+  const navigate = useNavigate(); 
 
-    useEffect(() => {
-        const fetchProduct = async () => {
-            try {
-                const response = await fetch(`${process.env.REACT_APP_BASE_URL}/db.json`);
-                if (!response.ok) {
-                    throw new Error("Failed to fetch product data");
-                }
-                const data = await response.json();
-                const foundProduct = data.products.find((prod: Product) => prod.id === id);
-                setProduct(foundProduct || null);
-            } catch (error) {
-                console.error("Error:", error);
-                toast.error("Could not load product data");
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        if (id) {
-            fetchProduct();
-        }
-    }, [id]);
-
-    if (loading) return <p>Loading...</p>;
-    if (!product) return <p>Product not found</p>;
-
-    const handleAddToCart = () => {
-        if (product) {
-            const cartItem: CartItem = {
-                id: product.id,
-                image: product.image,
-                model: product.model,
-                price: product.price,
-                quantity: 1, 
-            };
-            dispatch(addToCart(cartItem));
-            setCartBtnText("Added");
-            toast.success("Item added to Cart");
-            setTimeout(() => {
-                setCartBtnText("Add more (+)");
-            }, 1500);
-        }
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const response = await axios.get(`${process.env.REACT_APP_BASE_URL}/db.json`);
+        const productsData = response.data.products; 
+        const nikeProducts =productsData.filter((product: { brand: string; }) => product.brand.toLowerCase() === 'nike');
+        setProducts(nikeProducts);
+      } catch (error) {
+        console.log("Error:", error);
+      } 
     };
 
-    return (
-        <div>
-            <Grid container spacing={2} justifyContent="center">
-                <Grid item>
-                    <CardMedia
-                        component="img"
-                        alt={product.model}
-                        image={product.image}
-                        sx={ImageStyle}
-                    />
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                    <NikeCard>
-                        <CardContent>
-                            <Typography variant="h5" gutterBottom color='text.primary'>
-                                <b>{product.model}</b> 
-                            </Typography>
-                            <Typography variant="h6" color="text.secondary" sx={{ color: "red" }}>
-                                {product.brand}
-                            </Typography>
-                            <Typography variant="body2" color="text.primary" sx={{ display: "flex", flexDirection: "row" }}>
-                                <b style={{ color: "rgb(101,157,218)" }}>₹{product.price}</b>
-                                {product.oldPrice && (
-                                    <Typography sx={{ pl: 2 }}>
-                                        <Typography style={{ fontWeight: "lighter", fontSize: "small" }}>
-                                            M.R.P.: <del style={{ fontWeight: "lighter" }}>₹{product.oldPrice}</del>
-                                        </Typography>
-                                    </Typography>
-                                )}
-                            </Typography> 
-                            <Offers />
-                            <Typography variant="body2" color="text.primary" sx={{ mt: 1 }}>
-                                <strong>Description:</strong> {product.description}
-                            </Typography>
-                            <CustomButton
-                                variant="contained"
-                                onClick={handleAddToCart}
-                                sx={{ mt: 2 }}
-                            >
-                                {cartBtnText}
-                            </CustomButton>
-                        </CardContent>
-                    </NikeCard>
-                </Grid>
+    fetchProducts();
+  }, []);
+
+  const handleProductClick = (productId: string) => {
+    navigate(`/ProductDescription/${productId}`);
+  };
+
+  const filteredProducts = products.filter(product =>
+    product.model.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  return (
+    <div>
+      <Typography variant='h4'>
+        <b><SiNike style={{ margin: "12px" }} /> NIKE SNEAKERS</b>
+      </Typography>
+      <hr />
+      <Grid container spacing={4} justifyContent="center">
+        {filteredProducts.length === 0 ? (
+          <Typography>No products available</Typography>
+        ) : (
+          filteredProducts.map((product) => (
+            <Grid item xs={12} sm={6} md={4} lg={3} key={product.id}>
+              <NikeCard>
+                <CardMedia
+                  component="img"
+                  alt={product.model}
+                  height="185"
+                  image={product.image}
+                />
+                <CardContent>
+                  <Typography variant="body2" color="text.secondary">
+                    {product.brand}
+                  </Typography>
+                  <Typography variant="h6">
+                    <b>{product.model}</b>
+                  </Typography>
+                  <Typography variant="body2" color="text.primary" sx={{ display: "flex", flexDirection: "row" }}>
+                    <b style={{ color: "rgb(101,157,218)" }}>₹{product.price}</b>
+                    {product.oldPrice && (
+                      <Typography>
+                        <Typography style={{ fontWeight: "lighter", paddingLeft: "15px", fontSize: "small" }}>
+                          M.R.P.:<del style={{ fontWeight: "lighter", paddingLeft: "5px", fontSize: "small" }}>
+                          ₹{product.oldPrice}
+                        </del></Typography>
+                      </Typography>
+                    )}
+                  </Typography>
+                  <Button variant="contained" color="secondary" sx={{ mt: 2 }} onClick={() => handleProductClick(product.id)}>
+                    View Details
+                  </Button>
+                </CardContent>
+              </NikeCard>
             </Grid>
-            <Footer />
-            <ToastContainer style={{ marginTop: "45px" }} />
-        </div>
-    );
+          ))
+        )}
+      </Grid>
+      <Footer />
+    </div>
+  );
 };
 
-export default ProductDescription;
+export default Nike;
