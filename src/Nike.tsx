@@ -1,140 +1,161 @@
-
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import Footer from './Footer';
-import { Card, CardContent, Typography, Grid, Container, Button, CircularProgress } from '@mui/material';
+import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { addToCart } from './Cartslice';
+import { Card, CardMedia, CardContent, Typography, Button, Grid } from '@mui/material';
 import { styled } from '@mui/material/styles';
+import Footer from './Footer';
+import { ToastContainer, toast } from 'react-toastify';
+import Offers from './Offers';
 
-interface Item {
-  model: string;
-  price: number;
-  quantity: number;
+interface Product {
+    id: string;
+    image: string;
+    model: string;
+    brand: string;
+    price: number;
+    oldPrice?: number;
+    description: string;
 }
 
-interface Order {
-  date: string;
-  totalPrice: number;
-  items: Item[];
-  kicksID: string;
+interface CartItem {
+    id: string;
+    image: string;
+    model: string;
+    price: number;
+    quantity: number; 
 }
 
-const ProductCard = styled(Card)(({ theme }) => ({
-  maxWidth: 1000,
-  margin: theme.spacing(2),
+const NikeCard = styled(Card)(({ theme }) => ({
+    width: '100%',
+    maxWidth: 800,
+    margin: theme.spacing(2),
+    borderRadius: 17,
+    mt: 2,
 }));
 
-const Styledbtn=styled(Button)(()=>({
-  marginBottom: "16px", width: "200px",marginLeft:"4px" 
-  , marginTop: "16px",backgroundColor:"#f50057",color:"white",
-}))
-
-const OrderHistory: React.FC = () => {
-  const [orders, setOrders] = useState<Order[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
-  const kicksID = sessionStorage.getItem("KicksID");
-
-
-  // const handleDownload=()=>{
-  //   window.print();
-  // }
-
-  useEffect(() => {
-    const fetchOrders = async () => {
-      setLoading(true);
-      try {
-        // const response = await axios.get<Order[]>('http://localhost:8000/Orderhistory');
-        const response = await axios.get(`${process.env.REACT_APP_BASE_URL}/db.json`);
-        if (kicksID) {
-          const userOrders = response.data.Orderhistory.filter((order: { kicksID: string; }) => order.kicksID === kicksID);
-          setOrders(userOrders);
-        }
-      } catch (error) {
-        setError("Error fetching orders. Please try again later.");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchOrders();
-  }, [kicksID]);
-
-  if (loading) return <CircularProgress />;
-
-  return (
-    <div>
-    <Container>
-      <div className="order-history">
-        {kicksID === null ? (
-          <Typography variant="h6" align="center" style={{ marginTop: "25px",height:"50vh" }}>
-            <b>PLEASE LOGIN TO VIEW YOUR ORDER HISTORY</b>
-          </Typography>
-        ) : (
-          <>
-            <Typography variant='h4'  >
-              <b>ORDER HISTORY</b>
-            </Typography>
-            <hr></hr>
-            <Styledbtn variant='contained' color='secondary' >
-                <strong>USER NAME:</strong> <b style={{ color: "white" }}> {kicksID}</b>
-            </Styledbtn>
-          </>
-          
-        )}
-       
-        {error && (
-          <Typography color="error" align="center" style={{ marginBottom: "16px" }}>
-            {error}
-          </Typography>
-        )}
-        <Grid container spacing={2}>
-          {orders.map((order, index) => (
-            <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
-              <ProductCard>
-                <CardContent>
-                  <Typography variant="h6">
-                    <b>ORDER-{index + 1}</b>
-                  </Typography>
-                  <hr></hr>
-                  <Typography variant="body2">
-                    <b>Kicks ID:</b> {kicksID}
-                  </Typography>
-                  
-                  <Typography variant="body2">
-                    <b>Date:</b> {new Date(order.date).toLocaleString()}
-                  </Typography>
-                  <Typography variant="body2">
-                    <b>Total Price:</b> ₹{order.totalPrice.toFixed(2)}
-                  </Typography>
-                 
-                  <hr></hr>
-                  <ul style={{ listStyleType: "none", padding: 0 }}>
-                    {order.items.map((item, idx) => (
-                      <li key={idx}>
-                        <Typography variant="body2">
-                          <b>Item:</b> {item.model} - <b> ₹{item.price}</b>
-                        </Typography>
-                        <Typography variant="body2">
-                          <b>Quantity:</b> {item.quantity}
-                        </Typography>
-                      </li>
-                    ))}
-                  </ul>
-                {/* <Button variant='outlined' color='success' onClick={()=>handleDownload()}>Download</Button> */}
-                </CardContent>
-              </ProductCard>
-            </Grid>
-          ))}
-        </Grid>
-      </div>
-    </Container>
-     <Footer/>
-     </div>
-  );
+const ImageStyle = {
+    borderRadius: '8px',
+    boxShadow: '0 4px 4px rgba(0, 0, 0, 0.1)',
+    width: '100%',
+    height: 370,
+    objectFit: 'cover',
+    mt: 2,
 };
 
-export default OrderHistory;
+const CustomButton = styled(Button)(({ theme }) => ({
+    margin: '0px',
+    padding: '8px 12px',
+    backgroundColor: 'purple',
+    color: 'white',
+    borderRadius: '4px',
+    transition: 'transform 0.3s ease, box-shadow 0.3s ease',
+    '&:hover': {
+        backgroundColor: '#AD68C1',
+        transform: 'scale(1.03)',
+    },
+}));
 
+const ProductDescription: React.FC = () => {
+    const { id } = useParams<{ id: string }>();
+    const [product, setProduct] = useState<Product | null>(null);
+    const [loading, setLoading] = useState<boolean>(true);
+    const [cartBtnText, setCartBtnText] = useState<string>("Add to cart");
+    const dispatch = useDispatch();
 
+    useEffect(() => {
+        const fetchProduct = async () => {
+            try {
+                const response = await fetch(`${process.env.REACT_APP_BASE_URL}/db.json`);
+                if (!response.ok) {
+                    throw new Error("Failed to fetch product data");
+                }
+                const data = await response.json();
+                const foundProduct = data.products.find((prod: Product) => prod.id === id);
+                setProduct(foundProduct || null);
+            } catch (error) {
+                console.error("Error:", error);
+                toast.error("Could not load product data");
+            } finally {
+                setLoading(false);
+            }
+        };
 
+        if (id) {
+            fetchProduct();
+        }
+    }, [id]);
 
+    if (loading) return <p>Loading...</p>;
+    if (!product) return <p>Product not found</p>;
+
+    const handleAddToCart = () => {
+        if (product) {
+            const cartItem: CartItem = {
+                id: product.id,
+                image: product.image,
+                model: product.model,
+                price: product.price,
+                quantity: 1, 
+            };
+            dispatch(addToCart(cartItem));
+            setCartBtnText("Added");
+            toast.success("Item added to Cart");
+            setTimeout(() => {
+                setCartBtnText("Add more (+)");
+            }, 1500);
+        }
+    };
+
+    return (
+        <div>
+            <Grid container spacing={2} justifyContent="center">
+                <Grid item>
+                    <CardMedia
+                        component="img"
+                        alt={product.model}
+                        image={product.image}
+                        sx={ImageStyle}
+                    />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                    <NikeCard>
+                        <CardContent>
+                            <Typography variant="h5" gutterBottom color='text.primary'>
+                                <b>{product.model}</b> 
+                            </Typography>
+                            <Typography variant="h6" color="text.secondary" sx={{ color: "red" }}>
+                                {product.brand}
+                            </Typography>
+                            <Typography variant="body2" color="text.primary" sx={{ display: "flex", flexDirection: "row" }}>
+                                <b style={{ color: "rgb(101,157,218)" }}>₹{product.price}</b>
+                                {product.oldPrice && (
+                                    <Typography sx={{ pl: 2 }}>
+                                        <Typography style={{ fontWeight: "lighter", fontSize: "small" }}>
+                                            M.R.P.: <del style={{ fontWeight: "lighter" }}>₹{product.oldPrice}</del>
+                                        </Typography>
+                                    </Typography>
+                                )}
+                            </Typography> 
+                            <Offers />
+                            <Typography variant="body2" color="text.primary" sx={{ mt: 1 }}>
+                                <strong>Description:</strong> {product.description}
+                            </Typography>
+                            <CustomButton
+                                variant="contained"
+                                onClick={handleAddToCart}
+                                sx={{ mt: 2 }}
+                            >
+                                {cartBtnText}
+                            </CustomButton>
+                        </CardContent>
+                    </NikeCard>
+                </Grid>
+            </Grid>
+            <Footer />
+            <ToastContainer style={{ marginTop: "45px" }} />
+        </div>
+    );
+};
+
+export default ProductDescription;
