@@ -2,7 +2,6 @@ import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { removeFromCart, addItem, removeItem, clearCart } from './Cartslice';
 import { Link, useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import { AiFillPlusCircle } from 'react-icons/ai';
 import { HiMinusCircle } from 'react-icons/hi';
