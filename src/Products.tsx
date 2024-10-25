@@ -87,8 +87,8 @@ const Products: React.FC<ProductsProps> = ({ searchQuery }) => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await axios.get(`${process.env.REACT_APP_BASE_URL}/products`);
-        setProducts(response.data);
+        const response = await axios.get(`${process.env.REACT_APP_BASE_URL}/db.json`);
+        setProducts(response.data.products);
       } catch (error) {
         console.error("Error fetching products:", error);
       }
