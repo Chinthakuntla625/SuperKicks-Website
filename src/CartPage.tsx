@@ -12,7 +12,6 @@ import { Button, Card, CardContent, Typography, Grid, Box, Divider, IconButton }
 import DeleteIcon from '@mui/icons-material/Delete';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 
-
 interface CartItem {
   id: string;
   image: string;
@@ -50,7 +49,6 @@ const CartPage: React.FC = () => {
   const handlePlaceOrder = async () => {
     try {
       const kicksID = sessionStorage.getItem("KicksID");
-
       if (!kicksID) {
         alert("You don't have an account, please login to continue");
         toast.error("Please Login to continue");
@@ -58,27 +56,12 @@ const CartPage: React.FC = () => {
         return;
       }
 
-      const order = {
-        items,
-        totalPrice,
-        count,
-        kicksID,
-        date: new Date().toISOString(),
-      };
+      // const order = { items, totalPrice, count, kicksID, date: new Date().toISOString() };
+      // await axios.post(`${process.env.REACT_APP_BASE_URL}/Orderhistory`, order);
+      // const response = await axios.get(`${process.env.REACT_APP_BASE_URL}/address`);
+      // const userdata = response.data.find((i: any) => i.KicksID === kicksID);
 
-      // await axios.post('http://localhost:8000/Orderhistory', order);
-       await axios.post(`${process.env.REACT_APP_BASE_URL}/Orderhistory`,order);
-
-      // const response = await axios.get('http://localhost:8000/address');
-      const response = await axios.get(`${process.env.REACT_APP_BASE_URL}/address`);
-      const userdata = response.data.find((i: any) => i.KicksID === kicksID);
-
-      if (userdata) {
-        navigate('/Addresspack');
-      } else {
-        navigate('/Addresspack');
-      }
-
+      navigate('/Addresspack');
     } catch (error) {
       console.error("Error placing order: ", error);
     }
@@ -87,8 +70,11 @@ const CartPage: React.FC = () => {
   if (items.length === 0) {
     return (
       <Box display="flex" alignItems="center" justifyContent="center" flexDirection="column" p={3}>
-        <img src='https://go.picsnippets.com/hosted/images/ac/97a7e657b64475a09d370eb77d176a/cart_gif.gif' alt='Add items to continue'
-        style={{height:"400px"}}/>
+        <img 
+          src='https://go.picsnippets.com/hosted/images/ac/97a7e657b64475a09d370eb77d176a/cart_gif.gif' 
+          alt='Add items to continue'
+          style={{ height: "400px" }}
+        />
         <Typography variant="h6" mt={0}>Your cart is empty</Typography>
       </Box>
     );
@@ -96,80 +82,72 @@ const CartPage: React.FC = () => {
 
   return (
     <div>
-    <Box p={3}>
-      <Grid container spacing={2}>
-        <Grid item xs={12} md={8}>
-          <Card>
-            <CardContent>
-              <Typography variant="h4" color="secondary"><b>CHECKOUT </b>
-              </Typography>
-              
-              {/* <Divider sx={{ my: 2 }} /> */}
-              <hr></hr>
-              <Typography variant="body1" ><b>Total Items: {count}</b>
-              <br></br>
-              <Button  onClick={()=>dispatch(clearCart())} style={{cursor:"pointer",color:"red",}} size='small'>Empty Cart<DeleteForeverIcon style={{fontSize:'15px'}} /></Button>
-              </Typography>
-              <Divider sx={{ my: 2 }} />
-              {items.map((item) => (
-                <Box key={item.id} mb={2}>
-                  <Grid container spacing={2} alignItems="center">
-                    <Grid item>
-                      <Link to={`/ProductDescription/${item.id}`}>
-                        <img src={item.image} alt={item.model} style={{ height: 110, width: 100 }} />
-                      </Link>
-                    </Grid>
-                    <Grid item xs>
-                      <Typography variant="body1"><b>Quantity: </b>{item.quantity}</Typography>
-                      <IconButton size='small'><AiFillPlusCircle onClick={() => handleAddItem(item.id)} style={{ cursor: 'pointer' }} /></IconButton>
-                      {item.quantity === 1 ?(
-                        <IconButton size='small' disabled><HiMinusCircle onClick={() => handleDelItem(item.id)} style={{ cursor: 'pointer' }} /></IconButton>
-                      ):
-                      (
-                        <IconButton size='small'><HiMinusCircle onClick={() => handleDelItem(item.id)} style={{ cursor: 'pointer' }} /></IconButton>
-                      )
-                    }
-                      
-                      <Typography variant="body1"><b>Name: </b>{item.model}</Typography>
-                      <Typography variant="body1"><b>Price: </b>₹{item.price}</Typography>
-                    </Grid>
-                    <Grid item>
-                      <Button variant="outlined" color="secondary" onClick={() => handleRemoveFromCart(item.id)}> Remove from cart 
-                        <DeleteIcon style={{fontSize:"19px"}}/> </Button>
-                     </Grid>
-                  </Grid>
-                  <Divider sx={{ my: 2 }} />
-                </Box>
-              ))}
-            </CardContent>
-          </Card>
-        </Grid>
-        <Grid item xs={12} md={4}>
-          <Card>
-            <CardContent>
-              <Typography variant="h5" color="secondary"><b>Estimated Amount</b></Typography>
-              {/* <Divider sx={{ my: 2 }} /> */}
-              <hr></hr>
-              <Typography variant="body1" display="flex" justifyContent="space-between"><b>Sub total:</b> ${totalPrice.toFixed(2)}</Typography>
-              <Typography variant="body1" display="flex" justifyContent="space-between"><b>GST:</b> ₹0</Typography>
-              <Typography variant="body1" display="flex" justifyContent="space-between"><b>Delivery charges:</b> <del>₹69</del> <span style={{ color: "deepgreen" }}>FREE</span></Typography>
-              <Typography variant="body1" display="flex" justifyContent="space-between"><b>Platform fees:</b> <del>₹100</del> <span style={{ color: "deepgreen" }}>FREE</span></Typography>
-              {/* <Divider sx={{ my: 2 }} /> */}
-              <hr></hr>
-              <Typography variant="h6" color="secondary" display="flex" justifyContent="space-between"><b>Total Amount:</b> ₹{totalPrice.toFixed(2)}</Typography>
-              <Box mt={2}>
-                <Button variant="contained" color="secondary" fullWidth onClick={handlePlaceOrder}>
-                  CheckOut
+      <Box p={3}>
+        <Grid container spacing={2}>
+          <Grid item xs={12} md={8}>
+            <Card>
+              <CardContent>
+                <Typography variant="h4" color="secondary"><b>CHECKOUT</b></Typography>
+                <Divider sx={{ my: 2 }} />
+                <Typography variant="body1"><b>Total Items: {count}</b></Typography>
+                <Button onClick={() => dispatch(clearCart())} style={{ cursor: "pointer", color: "red" }} size='small'>
+                  Empty Cart <DeleteForeverIcon style={{ fontSize: '15px' }} />
                 </Button>
-              </Box>
-            </CardContent>
-          </Card>
+                <Divider sx={{ my: 2 }} />
+                {items.map((item) => (
+                  <Box key={item.id} mb={2}>
+                    <Grid container spacing={2} alignItems="center">
+                      <Grid item xs={4} sm={3}>
+                        <Link to={`/ProductDescription/${item.id}`}>
+                          <img src={item.image} alt={item.model} style={{ height: 110, width: '100%', objectFit: 'cover' }} />
+                        </Link>
+                      </Grid>
+                      <Grid item xs={8} sm={9}>
+                        <Typography variant="body1"><b>Quantity:</b> {item.quantity}</Typography>
+                        <IconButton size='small' onClick={() => handleAddItem(item.id)}>
+                          <AiFillPlusCircle style={{ cursor: 'pointer' }} />
+                        </IconButton>
+                        <IconButton size='small' onClick={() => handleDelItem(item.id)} disabled={item.quantity === 1}>
+                          <HiMinusCircle style={{ cursor: 'pointer' }} />
+                        </IconButton>
+                        <Typography variant="body1"><b>Name:</b> {item.model}</Typography>
+                        <Typography variant="body1"><b>Price:</b> ₹{item.price}</Typography>
+                      </Grid>
+                      <Grid item xs={12}>
+                        <Button variant="outlined" color="secondary" onClick={() => handleRemoveFromCart(item.id)}>
+                          Remove from cart <DeleteIcon style={{ fontSize: "19px" }} />
+                        </Button>
+                      </Grid>
+                    </Grid>
+                    <Divider sx={{ my: 2 }} />
+                  </Box>
+                ))}
+              </CardContent>
+            </Card>
+          </Grid>
+          <Grid item xs={12} md={4}>
+            <Card>
+              <CardContent>
+                <Typography variant="h5" color="secondary"><b>Estimated Amount</b></Typography>
+                <Divider sx={{ my: 2 }} />
+                <Typography variant="body1" display="flex" justifyContent="space-between"><b>Sub total:</b> ₹{totalPrice.toFixed(2)}</Typography>
+                <Typography variant="body1" display="flex" justifyContent="space-between"><b>GST:</b> ₹0</Typography>
+                <Typography variant="body1" display="flex" justifyContent="space-between"><b>Delivery charges:</b> <del>₹69</del> <span style={{ color: "deepgreen" }}>FREE</span></Typography>
+                <Typography variant="body1" display="flex" justifyContent="space-between"><b>Platform fees:</b> <del>₹100</del> <span style={{ color: "deepgreen" }}>FREE</span></Typography>
+                <Divider sx={{ my: 2 }} />
+                <Typography variant="h6" color="secondary" display="flex" justifyContent="space-between"><b>Total Amount:</b> ₹{totalPrice.toFixed(2)}</Typography>
+                <Box mt={2}>
+                  <Button variant="contained" color="secondary" fullWidth onClick={handlePlaceOrder}>
+                    CheckOut
+                  </Button>
+                </Box>
+              </CardContent>
+            </Card>
+          </Grid>
         </Grid>
-      </Grid>
-      <ToastContainer style={{marginTop:"45px"}}/>
-      
-    </Box>
-    <Footer />
+        <ToastContainer style={{ marginTop: "45px" }} />
+      </Box>
+      <Footer />
     </div>
   );
 };
