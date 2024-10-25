@@ -37,8 +37,10 @@ const NewBalance: React.FC<NikeProps> = ({ searchQuery }) => {
     const fetchProducts = async () => {
       try {
         // const response = await axios.get<Product[]>("http://localhost:8000/newbalance");
-        const response = await axios.get<Product[]>(`${process.env.REACT_APP_BASE_URL}/newbalance`);
-        setProducts(response.data);
+        const response = await axios.get(`${process.env.REACT_APP_BASE_URL}/db.json`);
+        const productsData = response.data.products; 
+        const newbalanceProducts =productsData.filter((product: { brand: string; }) => product.brand.toLowerCase() === 'newbalance');
+        setProducts(newbalanceProducts);
       } catch (error) {
         console.log("Error:", error);
       } 
