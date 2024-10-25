@@ -54,9 +54,10 @@ const Addresspack: React.FC = () => {
   const handleDelete = async (id: string) => {
     try {
       // const response = await axios.delete(`http://localhost:8000/address/${id}`);
-      const response = await axios.delete(`${process.env.REACT_APP_BASE_URL}/adddress/${id}`);
-      console.log('Delete successful:', response.data);
-      setAddress(prevAddresses => prevAddresses.filter(item => item.id !== id));
+      // const response = await axios.delete(`${process.env.REACT_APP_BASE_URL}/adddress/${id}`);
+      // console.log('Delete successful:', response.data);
+      toast.success("Address deleted Successfully")
+      // setAddress(prevAddresses => prevAddresses.filter(item => item.id !== id));
     } catch (error) {
       console.error('There was an error deleting the item!', error);
     }
@@ -68,8 +69,8 @@ const Addresspack: React.FC = () => {
     const fetchAddresses = async () => {
       try {
         // const response = await axios.get<Address[]>('http://localhost:8000/address');
-        const response = await axios.get<Address[]>(`${process.env.REACT_APP_BASE_URL}/address`);
-        setAddress(response.data);
+        const response = await axios.get(`${process.env.REACT_APP_BASE_URL}/db.json`);
+        setAddress(response.data.address);
       } catch (error) {
         console.error('Error fetching addresses', error);
       }
