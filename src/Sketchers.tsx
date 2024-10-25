@@ -37,8 +37,10 @@ const Sketchers: React.FC<NikeProps> = ({ searchQuery }) => {
     const fetchProducts = async () => {
       try {
         // const response = await axios.get<Product[]>("http://localhost:8000/sketchers");
-        const response = await axios.get<Product[]>(`${process.env.REACT_APP_BASE_URL}/sketchers`);
-        setProducts(response.data);
+        const response = await axios.get(`${process.env.REACT_APP_BASE_URL}/db.json`);
+        const productsData = response.data.products; 
+        const sketchersProducts =productsData.filter((product: { brand: string; }) => product.brand.toLowerCase() === 'yeezys');
+        setProducts(sketchersProducts);
       } catch (error) {
         console.log("Error:", error);
       } 
