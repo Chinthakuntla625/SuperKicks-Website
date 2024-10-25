@@ -55,7 +55,7 @@ const AppContent: React.FC = () => {
         <Route path='/Adidas' element={<Adidas searchQuery={search} />} />
         <Route path='/Sketchers' element={<Sketchers searchQuery={search} />} />
         <Route path='/NewBalance' element={<NewBalance searchQuery={search} />} />
-        <Route path='/ProductDescription/:id' element={<ProductDescription />} />
+        <Route path='/ProductDescription/:id' element={<ProductDescription searchQuery={search} />} />
         <Route path='/OrderHistory' element={<OrderHistory />} />
         <Route path='/AddressPack' element={<AddressPack />} />
         <Route path='/CartPage' element={<CartPage />} />
