@@ -102,7 +102,7 @@ const Header: React.FC<HeaderProps> = ({ search, setSearch }) => {
       <div className='Header-content'>
         <div className='Header-left'>
           <h2 style={{ color: 'rgb(241, 44, 44)', marginTop: "5px" }}>
-            <Link to='./Products' style={{ textDecoration: "none", color: "orange" }}>
+            <Link to='./Products' style={{ textDecoration: "none", color: "#fe5a1d" }}>
               <Typography 
                 sx={{ fontSize: { xs: '1.5rem', sm: '2rem' }, display: 'inline' }}
               >
@@ -185,7 +185,3 @@ const Head: React.FC = () => {
 }
 
 export default App;
-
-
-
-
