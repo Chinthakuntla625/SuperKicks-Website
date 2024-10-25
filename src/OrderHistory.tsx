@@ -44,9 +44,9 @@ const OrderHistory: React.FC = () => {
       setLoading(true);
       try {
         // const response = await axios.get<Order[]>('http://localhost:8000/Orderhistory');
-        const response = await axios.get<Order[]>(`${process.env.REACT_APP_BASE_URL}/Orderhistory`);
+        const response = await axios.get(`${process.env.REACT_APP_BASE_URL}/db.json`);
         if (kicksID) {
-          const userOrders = response.data.filter(order => order.kicksID === kicksID);
+          const userOrders = response.data.Orderhistory.filter((order: { kicksID: string; }) => order.kicksID === kicksID);
           setOrders(userOrders);
         }
       } catch (error) {
