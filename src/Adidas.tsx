@@ -36,9 +36,12 @@ const Adidas: React.FC<NikeProps> = ({ searchQuery }) => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        // const response = await axios.get<Product[]>("http://localhost:8000/adidas");
-        const response = await axios.get<Product[]>(`${process.env.REACT_APP_BASE_URL}/adidas`);
-        setProducts(response.data);
+        const response = await axios.get(`${process.env.REACT_APP_BASE_URL}/db.json`);
+        const productsData = response.data.products; 
+
+        const adidasProducts = productsData.filter((product: { brand: string; }) => product.brand.toLowerCase() === 'adidas');
+        
+        setProducts(adidasProducts); 
       } catch (error) {
         console.log("Error:", error);
       } 
@@ -57,11 +60,11 @@ const Adidas: React.FC<NikeProps> = ({ searchQuery }) => {
 
   return (
     <div>
-       <Typography variant='h4'  >
-              <b> <SiAdidas style={{marginBottom:"10px" ,marginLeft:"10px" ,marginRight:"7px",fontSize:"40px"}} />
-              ADIDAS SNEAKERS</b>
-            </Typography>
-      <hr></hr>
+      <Typography variant='h4'>
+        <b> <SiAdidas style={{ marginBottom: "10px", marginLeft: "10px", marginRight: "7px", fontSize: "40px" }} />
+          ADIDAS SNEAKERS</b>
+      </Typography>
+      <hr />
       <Grid container spacing={4} justifyContent="center">
         {filteredProducts.length === 0 ? (
           <Typography>No products available</Typography>
@@ -72,7 +75,7 @@ const Adidas: React.FC<NikeProps> = ({ searchQuery }) => {
                 <CardMedia
                   component="img"
                   alt={product.model}
-                   height="185"
+                  height="185"
                   image={product.image}
                 />
                 <CardContent>
@@ -82,22 +85,18 @@ const Adidas: React.FC<NikeProps> = ({ searchQuery }) => {
                   <Typography variant="h6">
                     <b>{product.model}</b>
                   </Typography>
-
-                  <Typography variant="body2" color="text.primary" sx={{display:"flex",flexDirection:"row"}}>
+                  <Typography variant="body2" color="text.primary" sx={{ display: "flex", flexDirection: "row" }}>
                     <b style={{ color: "rgb(101,157,218)" }}>₹{product.price}</b>
-        
                     {product.oldPrice && (
                       <Typography>
-                        <Typography style={{ fontWeight: "lighter", paddingLeft: "15px", fontSize: "small" }}>M.R.P.:<del style={{ fontWeight: "lighter", paddingLeft: "5px", fontSize: "small" }}>
-                        ₹{product.oldPrice}
-                      </del></Typography>
+                        <Typography style={{ fontWeight: "lighter", paddingLeft: "15px", fontSize: "small" }}>
+                          M.R.P.:<del style={{ fontWeight: "lighter", paddingLeft: "5px", fontSize: "small" }}>
+                          ₹{product.oldPrice}
+                        </del></Typography>
                       </Typography>
-                          
                     )}
                   </Typography>
-
-
-                  <Button variant="contained" color="secondary" sx={{mt:2}} onClick={() => handleProductClick(product.id)}>
+                  <Button variant="contained" color="secondary" sx={{ mt: 2 }} onClick={() => handleProductClick(product.id)}>
                     View Details
                   </Button>
                 </CardContent>
@@ -106,7 +105,7 @@ const Adidas: React.FC<NikeProps> = ({ searchQuery }) => {
           ))
         )}
       </Grid>
-      <Footer/>
+      <Footer />
     </div>
   );
 };
