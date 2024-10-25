@@ -3,7 +3,7 @@ import Carousel from 'react-bootstrap/Carousel';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
-import { Card, CardMedia, CardContent, Typography, Grid, Divider, Button } from '@mui/material';
+import { Card, CardMedia, CardContent, Typography, Grid, Divider, Button, useMediaQuery } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import Footer from './Footer';
 
@@ -20,27 +20,25 @@ interface ProductsProps {
   searchQuery: string;
 }
 
-const MyCarouselComponent: React.FC = () => (
+const MyCarouselComponent: React.FC<{ isSmallScreen: boolean }> = ({ isSmallScreen }) => (
   <Carousel>
     <Carousel.Item>
       <Link to="/Nike">
         <img
-          // src='https://cdn.findyourkicks.com/uploads/all/4571d3a3319822c8292340cb1fc8c21d.png'
           src='https://www.superkicks.in/cdn/shop/files/NIKE_DUNK-LOW-RETRO_2.jpg?v=1729582977&width=1500' 
           alt='Nike Deals'
           className='carousel-image'
-          style={{ width: '100%', height: 'auto' }}
+          style={{ width: '100%', height: 'auto', marginTop: isSmallScreen ? "60px" : "0px" }}
         />
       </Link>
     </Carousel.Item>
     <Carousel.Item>
       <Link to="/Adidas">
         <img
-          // src='https://cdn.findyourkicks.com/uploads/all/e757cd4e577e253a57c16a742911933a.png'
            src='https://www.superkicks.in/cdn/shop/files/PUMA_SPEEDCAT_BR_DESKTOP.jpg?v=1729582817&width=1500'
           alt='Adidas Banner'
           className='carousel-image'
-          style={{ width: '100%', height: 'auto' }}
+          style={{ width: '100%', height: 'auto', marginTop: isSmallScreen ? "60px" : "0px" }}
         />
       </Link>
     </Carousel.Item>
@@ -50,7 +48,7 @@ const MyCarouselComponent: React.FC = () => (
           src='https://www.superkicks.in/cdn/shop/files/NEWBALANCE_327_DESKTOP.jpg?v=1725956350&width=1780'
           alt='New Balance Deals'
           className='carousel-image'
-          style={{ width: '100%', height: 'auto' }}
+          style={{ width: '100%', height: 'auto', marginTop: isSmallScreen ? "60px" : "0px" }}
         />
       </Link> 
     </Carousel.Item>
@@ -83,6 +81,7 @@ const StyledButton = styled(Button)(({ theme }) => ({
 const Products: React.FC<ProductsProps> = ({ searchQuery }) => {
   const [products, setProducts] = useState<Product[]>([]);
   const navigate = useNavigate();
+  const isSmallScreen = useMediaQuery('(max-width: 768px)');
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -107,9 +106,9 @@ const Products: React.FC<ProductsProps> = ({ searchQuery }) => {
 
   return (
     <div>
-      <MyCarouselComponent />
+      <MyCarouselComponent isSmallScreen={isSmallScreen} />
       <Divider sx={{ my: 4 }}>
-        <Typography variant="h4" align="center" fontWeight="bold" color="purple"  sx={{ fontSize: { xs: '1.5rem', sm: '2rem' } }}>
+        <Typography variant="h4" align="center" fontWeight="bold" color="purple" sx={{ fontSize: { xs: '1.5rem', sm: '2rem' } }}>
           SHOP BY BRAND
         </Typography>
       </Divider>
@@ -181,4 +180,3 @@ const Products: React.FC<ProductsProps> = ({ searchQuery }) => {
 };
 
 export default Products;
-
