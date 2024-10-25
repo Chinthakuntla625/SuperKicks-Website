@@ -41,7 +41,7 @@ const PaymentIconsContainer = styled("div")(() => ({
   justifyContent: "center",
   gap: "25px",
   margin: "10px 0",
-  color: "orange",
+  color: "orange ",
 }));
 
 const Footer = () => {
@@ -107,46 +107,53 @@ const Footer = () => {
           />
           <SocialIcons>
             <a href="https://www.instagram.com/findyourkicksindia/?hl=en">
-              <IconButton sx={{ color: "orange" }}><InstagramIcon /></IconButton>
+              <IconButton sx={{ color: "orange " }}><InstagramIcon /></IconButton>
             </a>
             <a href="https://api.whatsapp.com/send/?phone=916284134558&text&type=phone_number&app_absent=0">
-              <IconButton sx={{ color: "orange" }}><FacebookIcon /></IconButton>
+              <IconButton sx={{ color: "orange " }}><FacebookIcon /></IconButton>
             </a>
             <a href="https://www.linkedin.com/company/find-your-kicks-india/">
-              <IconButton sx={{ color: "orange" }}><YouTubeIcon /></IconButton>
+              <IconButton sx={{ color: "orange " }}><YouTubeIcon /></IconButton>
             </a>
             <a href="https://x.com/findyourkicks?lang=en">
-              <IconButton sx={{ color: "orange" }}><XIcon /></IconButton>
+              <IconButton sx={{ color: "orange " }}><XIcon /></IconButton>
             </a>
           </SocialIcons>
         </SocialSection>
 
         <Box display="flex" flexWrap="wrap" justifyContent="center" sx={{ flex: 1, p: 2 }}>
           <Section>
-            <Typography variant="subtitle1" sx={{ color: "orange" }}><b>STORE</b></Typography>
+            <Typography variant="h6" sx={{ color: "White " }}><b>STORE</b></Typography>
             {obj.storeItems.map((item, idx) => (
-              <Typography variant="body2" key={idx}>{item}</Typography>
+              <Typography variant="subtitle1" key={idx}>{item}</Typography>
             ))}
           </Section>
 
           <Section>
-            <Typography variant="subtitle1" sx={{ color: "orange" }}><b>VALUES</b></Typography>
+            <Typography variant="h6" sx={{ color: "White " }}><b>VALUES</b></Typography>
             {obj.valuesItems.map((item, idx) => (
-              <Typography variant="body2" key={idx}>{item}</Typography>
+              <Typography variant="subtitle1" key={idx}>{item}</Typography>
             ))}
           </Section>
 
           <Section>
-            <Typography variant="subtitle1" sx={{ color: "orange" }}><b>ABOUT</b></Typography>
+            <Typography variant="h6" sx={{ color: "White " }}><b>ABOUT</b></Typography>
             {obj.aboutItems.map((item, idx) => (
-              <Typography variant="body2" key={idx}>{item}</Typography>
+              <Typography variant="subtitle1" key={idx}>{item}</Typography>
             ))}
           </Section>
 
           <Section>
-            <Typography variant="subtitle1" sx={{ color: "orange" }}><b>KICKS</b></Typography>
+            <Typography variant="h6" sx={{ color: "White " }}><b>KICKS</b></Typography>
             {obj.kicksItems.map((item, idx) => (
-              <Typography variant="body2" key={idx}>{item}</Typography>
+              <Typography variant="subtitle1" key={idx}>{item}</Typography>
+            ))}
+          </Section>
+
+          <Section>
+            <Typography variant="h6" sx={{ color: "White " }}><b>VALUES</b></Typography>
+            {obj.valuesItems.map((item, idx) => (
+              <Typography variant="subtitle1" key={idx}>{item}</Typography>
             ))}
           </Section>
 
