@@ -50,8 +50,8 @@ const Signup: React.FC = () => {
   const handleSubmit = async (values: SignupValues, actions: FormikHelpers<SignupValues>) => {
     try {
       // const response = await axios.post("http://localhost:8000/posts", values);
-      const response = await axios.post(`${process.env.REACT_APP_BASE_URL}/posts`,values);
-      console.log("Success:", response.data);
+      const response = await axios.post(`${process.env.REACT_APP_BASE_URL}/db.json`,values);
+      console.log("Success:", response.data.posts);
       setSave(false);
       alert('Registered successfully.');
       navigate('/Forms');
