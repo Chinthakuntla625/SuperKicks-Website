@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { addToCart } from './Cartslice';
-import { Card, CardMedia, CardContent, Typography, Button, Grid, useMediaQuery } from '@mui/material';
+import { Card, CardMedia, CardContent, Typography, Button, Grid} from '@mui/material';
 import { styled } from '@mui/material/styles';
 import Footer from './Footer';
 import { ToastContainer, toast } from 'react-toastify';
