@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { addToCart } from './Cartslice';
-import { Card, CardMedia, CardContent, Typography, Button, Grid} from '@mui/material';
+import { Card, CardMedia, CardContent, Typography, Button, Grid } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import Footer from './Footer';
 import { ToastContainer, toast } from 'react-toastify';
@@ -31,11 +31,7 @@ const NikeCard = styled(Card)(({ theme }) => ({
     maxWidth: 800,
     margin: theme.spacing(2),
     borderRadius: 17,
-    mt:2
-}));
-
-const ImageContainer = styled('div')(({ theme }) => ({
-    marginRight: theme.spacing(2.5),
+    mt: 2,
 }));
 
 const ImageStyle = {
@@ -44,7 +40,7 @@ const ImageStyle = {
     width: '100%',
     height: 370,
     objectFit: 'cover',
-    mt:2
+    mt: 2,
 };
 
 const CustomButton = styled(Button)(({ theme }) => ({
@@ -70,12 +66,13 @@ const ProductDescription: React.FC = () => {
     useEffect(() => {
         const fetchProduct = async () => {
             try {
-                const response = await fetch(`${process.env.REACT_APP_BASE_URL}/products/${id}`);
+                const response = await fetch(`${process.env.REACT_APP_BASE_URL}/db.json`);
                 if (!response.ok) {
                     throw new Error("Failed to fetch product data");
                 }
-                const data: Product = await response.json();
-                setProduct(data);
+                const data = await response.json();
+                const foundProduct = data.products.find((prod: Product) => prod.id === id);
+                setProduct(foundProduct || null);
             } catch (error) {
                 console.error("Error:", error);
                 toast.error("Could not load product data");
@@ -114,14 +111,12 @@ const ProductDescription: React.FC = () => {
         <div>
             <Grid container spacing={2} justifyContent="center">
                 <Grid item>
-                    <ImageContainer>
-                        <CardMedia
-                            component="img"
-                            alt={product.model}
-                            image={product.image}
-                            sx={ImageStyle}
-                        />
-                    </ImageContainer>
+                    <CardMedia
+                        component="img"
+                        alt={product.model}
+                        image={product.image}
+                        sx={ImageStyle}
+                    />
                 </Grid>
                 <Grid item xs={12} sm={6}>
                     <NikeCard>
