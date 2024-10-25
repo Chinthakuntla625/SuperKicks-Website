@@ -31,8 +31,8 @@ const Forms: React.FC = () => {
   const handleSubmit = async (values: FormValues) => {
     try {
       // const response = await axios.get("http://localhost:8000/posts");
-      const response = await axios.get(`${process.env.REACT_APP_BASE_URL}/posts`);
-      const users = response.data;
+      const response = await axios.get(`${process.env.REACT_APP_BASE_URL}/db.json`);
+      const users = response.data.posts;
       const user = users.find((user: { KicksID: string;  password: string }) => 
         user.KicksID === values.KicksID && 
         user.password === values.Password 
@@ -111,7 +111,7 @@ const Forms: React.FC = () => {
 
               <Grid item xs={12} mb={2} marginTop={2} textAlign="center">
                 <DialogActions>
-                <Button type="submit" variant="contained" color="primary" style={{ width: '190px',marginRight:"20px" }} disabled={isSubmitting}>
+                <Button type="submit" variant="contained" color="primary" style={{ width: '190px' }} disabled={isSubmitting}>
                   Sign In
                 </Button>
                 </DialogActions>
@@ -126,3 +126,4 @@ const Forms: React.FC = () => {
 };
 
 export default Forms;
+
