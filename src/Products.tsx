@@ -80,7 +80,7 @@ const StyledButton = styled(Button)(({ theme }) => ({
   },
 }));
 
-const Products: React.FC<ProductsProps> = ({ searchQuery='' }) => {
+const Products: React.FC<ProductsProps> = ({ searchQuery }) => {
   const [products, setProducts] = useState<Product[]>([]);
   const navigate = useNavigate();
 
