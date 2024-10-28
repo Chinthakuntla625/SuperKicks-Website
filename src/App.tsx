@@ -24,6 +24,7 @@ import Placeorder from './Placeorder';
 import Badge from '@mui/material/Badge';
 import { IconButton, Typography, useMediaQuery } from '@mui/material';
 import { FiSearch } from "react-icons/fi";
+import ChatBot from './Chatbot';
 
 const App: React.FC = () => {
   return (
@@ -145,6 +146,7 @@ const Header: React.FC<HeaderProps> = ({ search, setSearch }) => {
                 </IconButton>
               </Link>
             </Badge>
+              <ChatBot/>
           </Box>
         </div>
         <FadeMenu />
